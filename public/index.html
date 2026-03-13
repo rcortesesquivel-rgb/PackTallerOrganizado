@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Taller de Costura</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            color: #1a1a1a;
+        }
+
+        /* ===== LOGIN ===== */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-box {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+            font-size: 28px;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+            border-left: 4px solid #c33;
+        }
+
+        /* ===== DASHBOARD ===== */
+        .dashboard {
+            display: none;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 24px;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .nav-tabs button {
+            padding: 10px 18px;
+            background: #f0f0f0;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .nav-tabs button:hover {
+            background: #e8e8e8;
+        }
+
+        .nav-tabs button.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .tab-content h2 {
+            color: #1a1a1a;
+            margin-bottom: 25px;
+            font-size: 22px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            opacity: 0.95;
+            font-weight: 600;
+        }
+
+        .stat-card .number {
+            font-size: 40px;
+            font-weight: 700;
+        }
+
+        .form-section {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .form-section h3 {
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row input,
+        .form-row select {
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-row input:focus,
+        .form-row select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-row .btn {
+            margin-top: 0;
+            padding: 12px 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .table th {
+            background: #f5f5f5;
+            color: #1a1a1a;
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .table td {
+            padding: 14px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .action-btn {
+            padding: 8px 14px;
+            margin-right: 8px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .print-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .print-btn:hover {
+            background: #229954;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .login-box {
+                padding: 40px 25px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-tabs button {
+                width: 100%;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .table {
+                font-size: 12px;
+            }
+
+            .table th, .table td {
+                padding: 10px;
+            }
+
+            .action-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+                margin-right: 4px;
+            }
+        }
+
+        /* ===== PRINT ===== */
+        @media print {
+            body { background: white; }
+            .header, .nav-tabs, .action-btn, .logout-btn, .form-section { display: none; }
+            .tab-content { box-shadow: none; padding: 0; }
+            .container { margin: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN -->
+    <div id="loginContainer" class="login-container">
+        <div class="login-box">
+            <h1>🧵 Gestor de Taller</h1>
+            <p class="login-subtitle">Sistema de gestión para talleres de costura</p>
+            <div class="error" id="loginError"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" required placeholder="rcortesesquivel@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="password" required placeholder="admin123">
+                </div>
+                <button type="submit" class="btn">Iniciar Sesión</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboardContainer" class="dashboard">
+        <div class="header">
+            <h1>🧵 Gestor de Taller de Costura</h1>
+            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+        </div>
+
+        <div class="container">
+            <!-- ESTADÍSTICAS -->
+            <div id="statsSection">
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3>Pedidos Activos</h3>
+                        <div class="number" id="activeOrders">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Máquinas en Mantenimiento</h3>
+                        <div class="number" id="machinesUnderMaintenance">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Telas Bajo Stock</h3>
+                        <div class="number" id="lowStockFabrics">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NAVEGACIÓN -->
+            <div class="nav-tabs">
+                <button class="active" onclick="showTab('dashboard')">📊 Dashboard</button>
+                <button onclick="showTab('fabrics')">🧵 Inventario de Telas</button>
+                <button onclick="showTab('machines')">⚙️ Máquinas</button>
+                <button onclick="showTab('maintenance')">🔧 Mantenimiento</button>
+                <button onclick="showTab('clients')">👥 Clientes</button>
+                <button onclick="showTab('orders')">📋 Pedidos</button>
+                <button onclick="showTab('vouchers')">🎫 Vales</button>
+                <button onclick="showTab('materials')">📥 Material Complementario</button>
+                <button onclick="showTab('admin')" id="adminBtn" style="display: none; background: #ff6b35; color: white;">⚙️ Administrador</button>
+            </div>
+
+            <!-- TAB: DASHBOARD -->
+            <div id="dashboard" class="tab-content active">
+                <h2>Panel de Control</h2>
+                <p style="color: #666; line-height: 1.6;">
+                    Bienvenido al gestor de taller de costura. Este sistema te permite gestionar de manera centralizada:
+                </p>
+                <ul style="margin-top: 15px; margin-left: 20px; color: #666; line-height: 1.8;">
+                    <li><strong>Inventario de telas:</strong> Controla tus existencias, proveedores y precios</li>
+                    <li><strong>Máquinas:</strong> Registra tus máquinas de coser y su estado</li>
+                    <li><strong>Mantenimiento:</strong> Planifica y registra el mantenimiento preventivo</li>
+                    <li><strong>Clientes:</strong> Mantén fichas con medidas y preferencias</li>
+                    <li><strong>Pedidos:</strong> Gestiona presupuestos y seguimiento de trabajos</li>
+                    <li><strong>Vales:</strong> Genera vales de recepción imprimibles</li                </div>
+            </div>
+
+            <!-- TAB: ADMINISTRADOR -->
+            <div id="admin" class="tab-content">
+                <h2>Administrador - Gestion de Usuarios</h2>
+                <div class="form-section">
+                    <h3>Usuarios del Sistema</h3>
+                    <p style="color: #666; margin-bottom: 20px; font-size: 14px;">
+                        Aqui puedes ver todos los usuarios y establecer la fecha de compra para cada uno.
+                    </p>
+                    <table class="table" style="margin-top: 20px;">
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Nombre</th>
+                                <th>Rol</th>
+                                <th>Fecha de Compra</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminUsersTable">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #999;">Cargando usuarios...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: DASHBOARD -->          <div id="fabrics" class="tab-content">
+                <h2>Inventario de Telas</h2>
+                <div class="form-section">
+                    <h3>Agregar Nueva Tela</h3>
+                    <div class="form-row">
+                        <input type="text" id="fabricName" placeholder="Nombre de la tela" required>
+                        <input type="text" id="fabricType" placeholder="Tipo (algodón, lino, etc)" required>
+                        <input type="text" id="fabricComposition" placeholder="Composición">
+                        <input type="text" id="fabricColor" placeholder="Color/Estampado" required>
+                    </div>
+                    <div class="form-row">
+                        <input type="number" id="fabricWidth" placeholder="Ancho (cm)" step="0.1" required>
+                        <input type="number" id="fabricMeters" placeholder="Metraje disponible" step="0.1" required>
+                        <input type="text" id="fabricLocation" placeholder="Ubicación física" required>
+                        <input type="text" id="fabricSupplier" placeholder="Proveedor">
+                    </div>
+                    <div class="form-row">
+                        <input type="number" id="fabricPrice" placeholder="Precio por metro" step="0.01" required>
+                        <button class="btn" onclick="addFabric()">✓ Agregar Tela</button>
+                    </div>
+                </div>
+                <table class="table" id="fabricsTable">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Color</th>
+                            <th>Metraje</th>
+                            <th>Ubicación</th>
+                            <th>Precio/m</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- TAB: MÁQUINAS -->
+            <div id="machines" class="tab-content">
+                <h2>Máquinas de Coser</h2>
+                <div class="form-section">
+                    <h3>Agregar Nueva Máquina</h3>
+                    <div class="form-row">
+                        <input type="text" id="machineName" placeholder="Nombre de la máquina" required>
+                        <input type="text" id="machineModel" placeholder="Modelo" required>
+                        <input type="text" id="machineSerial" placeholder="Serial">
+                        <select id="machineStatus" required>
+                            <option value="">Seleccionar estado...</option>
+                            <option value="activa">Activa</option>
+                            <option value="mantenimiento">En Mantenimiento</option>
+                            <option value="reparacion">En Reparación</option>
+                        </select>
+                        <button class="btn" onclick="addMachine()">✓ Agregar Máquina</button>
+                    </div>
+                </div>
+                <table class="table" id="machinesTable">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Modelo</th>
+                            <th>Serial</th>
+                            <th>Estado</th>
+                            <th>Próximo Mantenimiento</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- TAB: MANTENIMIENTO -->
+            <div id="maintenance" class="tab-content">
+                <h2>Registro de Mantenimiento</h2>
+                <div class="form-section">
+                    <h3>Registrar Mantenimiento</h3>
+                    <div class="form-row">
+                        <select id="maintenanceMachine" required>
+                            <option value="">Seleccionar máquina...</option>
+                        </select>
+                        <select id="maintenanceType" required>
+                            <option value="">Seleccionar tipo...</option>
+                            <option value="limpieza">Limpieza</option>
+                            <option value="aceitado">Aceitado</option>
+                            <option value="revision">Revisión</option>
+                            <option value="reparacion">Reparación</option>
+                        </select>
+                        <input type="text" id="maintenanceDescription" placeholder="Descripción">
+                        <input type="date" id="maintenanceNextDate" required>
+                        <button class="btn" onclick="addMaintenance()">✓ Registrar</button>
+                    </div>
+                </div>
+                <div id="maintenanceHistory"></div>
+            </div>
+
+            <!-- TAB: CLIENTES -->
+            <div id="clients" class="tab-content">
+                <h2>Fichas de Clientes</h2>
+                <div class="form-section">
+                    <h3>Agregar Nuevo Cliente</h3>
+                    <div class="form-row">
+                        <input type="text" id="clientName" placeholder="Nombre" required>
+                        <input type="email" id="clientEmail" placeholder="Email">
+                        <input type="tel" id="clientPhone" placeholder="Teléfono">
+                        <input type="text" id="clientAddress" placeholder="Dirección">
+                    </div>
+                    <div class="form-row">
+                        <input type="number" id="clientBust" placeholder="Busto (cm)" step="0.1">
+                        <input type="number" id="clientWaist" placeholder="Cintura (cm)" step="0.1">
+                        <input type="number" id="clientHip" placeholder="Cadera (cm)" step="0.1">
+                        <input type="number" id="clientShoulder" placeholder="Hombro (cm)" step="0.1">
+                        <button class="btn" onclick="addClient()">✓ Agregar Cliente</button>
+                    </div>
+                </div>
+                <table class="table" id="clientsTable">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th>Busto</th>
+                            <th>Cintura</th>
+                            <th>Cadera</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- TAB: PEDIDOS -->
+            <div id="orders" class="tab-content">
+                <h2>Gestión de Pedidos</h2>
+                <div class="form-section">
+                    <h3>Nuevo Pedido</h3>
+                    <div class="form-row">
+                        <input type="text" id="orderNumber" placeholder="Número de pedido" required>
+                        <select id="orderClient" required>
+                            <option value="">Seleccionar cliente...</option>
+                        </select>
+                        <input type="text" id="orderDescription" placeholder="Descripción">
+                        <input type="number" id="orderBudget" placeholder="Presupuesto" step="0.01" required>
+                        <button class="btn" onclick="addOrder()">✓ Crear Pedido</button>
+                    </div>
+                </div>
+                <table class="table" id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Cliente</th>
+                            <th>Descripción</th>
+                            <th>Presupuesto</th>
+                            <th>Pagado</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- TAB: VALES -->
+            <div id="vouchers" class="tab-content">
+                <h2>Vales de Recepción</h2>
+                <table class="table" id="vouchersTable">
+                    <thead>
+                        <tr>
+                            <th>Número de Pedido</th>
+                            <th>Fecha de Emisión</th>
+                            <th>Fecha de Vencimiento</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- TAB: MATERIAL COMPLEMENTARIO -->
+            <div id="materials" class="tab-content">
+                <h2>📥 Material Complementario</h2>
+                <div class="form-section" style="text-align: center; padding: 40px;">
+                    <h3 style="margin-bottom: 20px;">Pack del Taller Organizado</h3>
+                    <p style="color: #666; margin-bottom: 20px; font-size: 15px;">
+                        El material complementario en PDF estará disponible para descargar después de <strong>8 días</strong> desde tu primer acceso.
+                    </p>
+                    <div id="materialStatus" style="margin: 30px 0;">
+                        <div style="background: #f0f0f0; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                            <p style="color: #666; margin-bottom: 10px;">Estado de tu acceso:</p>
+                            <p id="accessInfo" style="font-size: 18px; font-weight: 600; color: #667eea;">Cargando...</p>
+                        </div>
+                    </div>
+                    <button id="downloadBtn" onclick="downloadMaterial()" style="
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        padding: 12px 30px;
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        font-weight: 600;
+                        transition: all 0.3s ease;
+                        display: none;
+                    ">📥 Descargar Material</button>
+                    <button id="downloadBtnDisabled" style="
+                        background: #ccc;
+                        color: #666;
+                        padding: 12px 30px;
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 16px;
+                        cursor: not-allowed;
+                        font-weight: 600;
+                        display: none;
+                    ">⏳ Material no disponible aún</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api';
+        let token = localStorage.getItem('token');
+        let currentUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+
+        if (token && currentUser) {
+            showDashboard();
+        } else {
+            showLogin();
+        }
+
+        function showLogin() {
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('dashboardContainer').style.display = 'none';
+        }
+
+        function showDashboard() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+            loadDashboard();
+            loadFabrics();
+            loadMachines();
+            loadClients();
+            loadOrders();
+            loadVouchers();
+        }
+
+        document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (!response.ok) throw new Error('Credenciales inválidas');
+
+                const data = await response.json();
+                token = data.token;
+                currentUser = data.user;
+
+                localStorage.setItem('token', token);
+                localStorage.setItem('user', JSON.stringify(currentUser));
+
+                showDashboard();
+            } catch (error) {
+                errorDiv.textContent = '❌ ' + error.message;
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            token = null;
+            currentUser = null;
+            showLogin();
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        async function loadDashboard() {
+            try {
+                const response = await fetch(`${API_URL}/dashboard`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                document.getElementById('activeOrders').textContent = data.activeOrders;
+                document.getElementById('machinesUnderMaintenance').textContent = data.machinesUnderMaintenance;
+                document.getElementById('lowStockFabrics').textContent = data.lowStockFabrics;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function loadFabrics() {
+            try {
+                const response = await fetch(`${API_URL}/fabrics`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const fabrics = await response.json();
+                const tbody = document.querySelector('#fabricsTable tbody');
+                
+                if (fabrics.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">No hay telas registradas</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = fabrics.map(f => `
+                    <tr>
+                        <td><strong>${f.name}</strong></td>
+                        <td>${f.type}</td>
+                        <td>${f.color}</td>
+                        <td>${f.meters}m</td>
+                        <td>${f.location}</td>
+                        <td>$${parseFloat(f.price_per_meter).toFixed(2)}</td>
+                        <td><button class="action-btn delete-btn" onclick="deleteFabric(${f.id})">Eliminar</button></td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function addFabric() {
+            const name = document.getElementById('fabricName').value.trim();
+            const type = document.getElementById('fabricType').value.trim();
+            const color = document.getElementById('fabricColor').value.trim();
+            const meters = parseFloat(document.getElementById('fabricMeters').value);
+            const location = document.getElementById('fabricLocation').value.trim();
+
+            if (!name || !type || !color || !meters || !location) {
+                alert('Por favor completa todos los campos requeridos');
+                return;
+            }
+
+            const fabric = {
+                name, type,
+                composition: document.getElementById('fabricComposition').value.trim(),
+                color, meters, location,
+                width: parseFloat(document.getElementById('fabricWidth').value),
+                supplier: document.getElementById('fabricSupplier').value.trim(),
+                price: parseFloat(document.getElementById('fabricPrice').value)
+            };
+
+            try {
+                await fetch(`${API_URL}/fabrics`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(fabric)
+                });
+                document.getElementById('fabricName').value = '';
+                document.getElementById('fabricType').value = '';
+                document.getElementById('fabricComposition').value = '';
+                document.getElementById('fabricColor').value = '';
+                document.getElementById('fabricWidth').value = '';
+                document.getElementById('fabricMeters').value = '';
+                document.getElementById('fabricLocation').value = '';
+                document.getElementById('fabricSupplier').value = '';
+                document.getElementById('fabricPrice').value = '';
+                loadFabrics();
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function deleteFabric(id) {
+            if (confirm('¿Eliminar esta tela?')) {
+                try {
+                    await fetch(`${API_URL}/fabrics/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    loadFabrics();
+                } catch (error) {
+                    alert('Error al eliminar');
+                }
+            }
+        }
+
+        async function loadMachines() {
+            try {
+                const response = await fetch(`${API_URL}/machines`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const machines = await response.json();
+                const tbody = document.querySelector('#machinesTable tbody');
+                const select = document.getElementById('maintenanceMachine');
+                
+                if (machines.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #999;">No hay máquinas registradas</td></tr>';
+                } else {
+                    tbody.innerHTML = machines.map(m => `
+                        <tr>
+                            <td><strong>${m.name}</strong></td>
+                            <td>${m.model}</td>
+                            <td>${m.serial}</td>
+                            <td><span style="background: ${m.status === 'activa' ? '#d4edda' : '#f8d7da'}; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${m.status}</span></td>
+                            <td>${new Date(m.next_maintenance).toLocaleDateString()}</td>
+                            <td><button class="action-btn delete-btn" onclick="deleteMachine(${m.id})">Eliminar</button></td>
+                        </tr>
+                    `).join('');
+                }
+
+                select.innerHTML = '<option value="">Seleccionar máquina...</option>' + machines.map(m => `
+                    <option value="${m.id}">${m.name}</option>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function addMachine() {
+            const name = document.getElementById('machineName').value.trim();
+            const model = document.getElementById('machineModel').value.trim();
+            const status = document.getElementById('machineStatus').value;
+
+            if (!name || !model || !status) {
+                alert('Por favor completa todos los campos requeridos');
+                return;
+            }
+
+            try {
+                await fetch(`${API_URL}/machines`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({
+                        name, model, status,
+                        serial: document.getElementById('machineSerial').value.trim()
+                    })
+                });
+                document.getElementById('machineName').value = '';
+                document.getElementById('machineModel').value = '';
+                document.getElementById('machineSerial').value = '';
+                document.getElementById('machineStatus').value = '';
+                loadMachines();
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function deleteMachine(id) {
+            if (confirm('¿Eliminar esta máquina?')) {
+                try {
+                    await fetch(`${API_URL}/machines/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    loadMachines();
+                } catch (error) {
+                    alert('Error al eliminar');
+                }
+            }
+        }
+
+        async function addMaintenance() {
+            const machine_id = parseInt(document.getElementById('maintenanceMachine').value);
+            const type = document.getElementById('maintenanceType').value;
+            const next_date = document.getElementById('maintenanceNextDate').value;
+
+            if (!machine_id || !type || !next_date) {
+                alert('Por favor completa todos los campos requeridos');
+                return;
+            }
+
+            try {
+                await fetch(`${API_URL}/maintenance`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({
+                        machine_id, type, next_date,
+                        description: document.getElementById('maintenanceDescription').value.trim()
+                    })
+                });
+                document.getElementById('maintenanceDescription').value = '';
+                document.getElementById('maintenanceNextDate').value = '';
+                document.getElementById('maintenanceType').value = '';
+                loadMachines();
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function loadClients() {
+            try {
+                const response = await fetch(`${API_URL}/clients`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const clients = await response.json();
+                const tbody = document.querySelector('#clientsTable tbody');
+                const select = document.getElementById('orderClient');
+
+                if (clients.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">No hay clientes registrados</td></tr>';
+                } else {
+                    tbody.innerHTML = clients.map(c => `
+                        <tr>
+                            <td><strong>${c.name}</strong></td>
+                            <td>${c.email || '-'}</td>
+                            <td>${c.phone || '-'}</td>
+                            <td>${c.bust || '-'}</td>
+                            <td>${c.waist || '-'}</td>
+                            <td>${c.hip || '-'}</td>
+                            <td><button class="action-btn delete-btn" onclick="deleteClient(${c.id})">Eliminar</button></td>
+                        </tr>
+                    `).join('');
+                }
+
+                select.innerHTML = '<option value="">Seleccionar cliente...</option>' + clients.map(c => `
+                    <option value="${c.id}">${c.name}</option>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function addClient() {
+            const name = document.getElementById('clientName').value.trim();
+
+            if (!name) {
+                alert('Por favor ingresa el nombre del cliente');
+                return;
+            }
+
+            try {
+                await fetch(`${API_URL}/clients`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({
+                        name,
+                        email: document.getElementById('clientEmail').value.trim(),
+                        phone: document.getElementById('clientPhone').value.trim(),
+                        address: document.getElementById('clientAddress').value.trim(),
+                        bust: parseFloat(document.getElementById('clientBust').value) || null,
+                        waist: parseFloat(document.getElementById('clientWaist').value) || null,
+                        hip: parseFloat(document.getElementById('clientHip').value) || null,
+                        shoulder: parseFloat(document.getElementById('clientShoulder').value) || null
+                    })
+                });
+                document.getElementById('clientName').value = '';
+                document.getElementById('clientEmail').value = '';
+                document.getElementById('clientPhone').value = '';
+                document.getElementById('clientAddress').value = '';
+                document.getElementById('clientBust').value = '';
+                document.getElementById('clientWaist').value = '';
+                document.getElementById('clientHip').value = '';
+                document.getElementById('clientShoulder').value = '';
+                loadClients();
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function deleteClient(id) {
+            if (confirm('¿Eliminar este cliente?')) {
+                try {
+                    await fetch(`${API_URL}/clients/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    loadClients();
+                } catch (error) {
+                    alert('Error al eliminar');
+                }
+            }
+        }
+
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_URL}/orders`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const orders = await response.json();
+                const tbody = document.querySelector('#ordersTable tbody');
+
+                if (orders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">No hay pedidos registrados</td></tr>';
+                } else {
+                    tbody.innerHTML = orders.map(o => `
+                        <tr>
+                            <td><strong>${o.order_number}</strong></td>
+                            <td>${o.client_id}</td>
+                            <td>${o.description || '-'}</td>
+                            <td>$${parseFloat(o.budget).toFixed(2)}</td>
+                            <td>$${parseFloat(o.paid).toFixed(2)}</td>
+                            <td><span style="background: ${o.status === 'completado' ? '#d4edda' : '#fff3cd'}; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${o.status}</span></td>
+                            <td><button class="action-btn delete-btn" onclick="deleteOrder(${o.id})">Eliminar</button></td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function addOrder() {
+            const order_number = document.getElementById('orderNumber').value.trim();
+            const client_id = parseInt(document.getElementById('orderClient').value);
+            const budget = parseFloat(document.getElementById('orderBudget').value);
+
+            if (!order_number || !client_id || !budget) {
+                alert('Por favor completa todos los campos requeridos');
+                return;
+            }
+
+            try {
+                await fetch(`${API_URL}/orders`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({
+                        order_number, client_id, budget,
+                        description: document.getElementById('orderDescription').value.trim(),
+                        status: 'pendiente'
+                    })
+                });
+                document.getElementById('orderNumber').value = '';
+                document.getElementById('orderClient').value = '';
+                document.getElementById('orderDescription').value = '';
+                document.getElementById('orderBudget').value = '';
+                loadOrders();
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function deleteOrder(id) {
+            if (confirm('¿Eliminar este pedido?')) {
+                try {
+                    await fetch(`${API_URL}/orders/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    loadOrders();
+                } catch (error) {
+                    alert('Error al eliminar');
+                }
+            }
+        }
+
+        async function loadVouchers() {
+            try {
+                const response = await fetch(`${API_URL}/vouchers`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const vouchers = await response.json();
+                const tbody = document.querySelector('#vouchersTable tbody');
+
+                if (vouchers.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">No hay vales registrados</td></tr>';
+                } else {
+                    tbody.innerHTML = vouchers.map(v => `
+                        <tr>
+                            <td><strong>${v.order_id}</strong></td>
+                            <td>${new Date(v.issue_date).toLocaleDateString()}</td>
+                            <td>${new Date(v.due_date).toLocaleDateString()}</td>
+                            <td><span style="background: #d4edda; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${v.status}</span></td>
+                            <td><button class="action-btn print-btn" onclick="printVoucher(${v.id})">Imprimir</button></td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function printVoucher(id) {
+            window.print();
+        }
+
+        // MATERIAL COMPLEMENTARIO
+        async function loadMaterialStatus() {
+            try {
+                const response = await fetch(`${API_URL}/user-access-info`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                const accessInfo = document.getElementById('accessInfo');
+                const downloadBtn = document.getElementById('downloadBtn');
+                const downloadBtnDisabled = document.getElementById('downloadBtnDisabled');
+                
+                if (data.canDownload) {
+                    accessInfo.innerHTML = '✅ Material disponible para descargar';
+                    accessInfo.style.color = '#28a745';
+                    downloadBtn.style.display = 'inline-block';
+                    downloadBtnDisabled.style.display = 'none';
+                } else {
+                    const daysLeft = data.daysRemaining;
+                    accessInfo.innerHTML = `⏳ Material disponible en ${daysLeft} día${daysLeft !== 1 ? 's' : ''}`;
+                    accessInfo.style.color = '#ff9800';
+                    downloadBtn.style.display = 'none';
+                    downloadBtnDisabled.style.display = 'inline-block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('accessInfo').innerHTML = 'Error al cargar información';
+            }
+        }
+
+        async function downloadMaterial() {
+            try {
+                const response = await fetch(`${API_URL}/download-material`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'Pack_Taller_Organizado_Info.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                } else {
+                    const error = await response.json();
+                    alert(error.error || 'Error al descargar');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al descargar el material');
+            }
+        }
+
+        // Cargar estado del material cuando se abre la pestaña
+        const originalShowTab = window.showTab;
+        window.showTab = function(tabName) {
+            originalShowTab(tabName);
+            if (tabName === 'materials') {
+                loadMaterialStatus();
+            }
+            if (tabName === 'admin') {
+                loadAdminUsers();
+            }
+        };
+
+        // ADMINISTRADOR
+        async function loadAdminUsers() {
+            try {
+                const response = await fetch(`${API_URL}/admin/users`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const users = await response.json();
+                
+                const tbody = document.getElementById('adminUsersTable');
+                if (tbody) {
+                    tbody.innerHTML = users.map(u => `
+                        <tr>
+                            <td>${u.email}</td>
+                            <td>${u.name}</td>
+                            <td>${u.role}</td>
+                            <td>${u.purchase_date ? new Date(u.purchase_date).toLocaleDateString() : 'Sin fecha'}</td>
+                            <td>
+                                <input type="date" id="date-${u.id}" value="${u.purchase_date ? u.purchase_date.split('T')[0] : ''}" />
+                                <button onclick="setPurchaseDate(${u.id})">Guardar</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function setPurchaseDate(userId) {
+            const dateInput = document.getElementById(`date-${userId}`);
+            const purchaseDate = dateInput.value;
+            
+            if (!purchaseDate) {
+                alert('Por favor selecciona una fecha');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/admin/users/${userId}/set-purchase-date`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ purchase_date: new Date(purchaseDate).toISOString() })
+                });
+                
+                if (response.ok) {
+                    alert('Fecha de compra actualizada');
+                    loadAdminUsers();
+                } else {
+                    alert('Error al actualizar');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Mostrar botón de admin si el usuario es admin
+        function checkAdminRole() {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                if (user.role === 'admin') {
+                    document.getElementById('adminBtn').style.display = 'inline-block';
+                }
+            }
+        }
+
+        // Verificar rol al cargar
+        window.addEventListener('load', checkAdminRole);
+    </script>
+</body>
+</html>
