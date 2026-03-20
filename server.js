@@ -349,6 +349,27 @@ app.get('/api/download-material', auth, (req, res) => {
   });
 });
 
+app.get('/api/download-guide', auth, (req, res) => {
+  db.get('SELECT purchase_date FROM users WHERE id = ?', [req.user.id], (err, user) => {
+    if (!user || !user.purchase_date) {
+      return res.status(403).json({ error: 'Acceso no autorizado. La fecha de compra no ha sido registrada.' });
+    }
+    
+    const purchaseDate = new Date(user.purchase_date);
+    const now = new Date();
+    const daysPassed = Math.floor((now - purchaseDate) / (1000 * 60 * 60 * 24));
+    
+    if (daysPassed < 8) {
+      return res.status(403).json({ error: 'El material estará disponible en ' + (8 - daysPassed) + ' días.' });
+    }
+    
+    // Descargar el PDF de guía
+    const path = require('path');
+    const filePath = path.join(__dirname, 'public', 'Guia_Uso_App.pdf');
+    res.download(filePath, 'Guia_Uso_App.pdf');
+  });
+});
+
 // DASHBOARD
 app.get('/api/dashboard', auth, (req, res) => {
   db.all('SELECT COUNT(*) as count FROM orders WHERE status = "activo"', (err, orders) => {

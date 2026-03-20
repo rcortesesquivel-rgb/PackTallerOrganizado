@@ -1,0 +1,42 @@
+
+        async function addNewUser() {
+            const email = document.getElementById('newUserEmail').value.trim();
+            const name = document.getElementById('newUserName').value.trim();
+            const password = document.getElementById('newUserPassword').value.trim();
+            const purchaseDate = document.getElementById('newUserPurchaseDate').value;
+            
+            if (!email || !name || !password) {
+                alert('Por favor completa todos los campos requeridos');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/admin/users`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        email,
+                        name,
+                        password,
+                        purchase_date: purchaseDate ? new Date(purchaseDate).toISOString() : null
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('Usuario creado exitosamente');
+                    document.getElementById('newUserEmail').value = '';
+                    document.getElementById('newUserName').value = '';
+                    document.getElementById('newUserPassword').value = '';
+                    document.getElementById('newUserPurchaseDate').value = '';
+                    loadAdminUsers();
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + (error.error || 'No se pudo crear el usuario'));
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }

@@ -464,6 +464,23 @@
             <!-- TAB: ADMINISTRADOR -->
             <div id="admin" class="tab-content">
                 <h2>Administrador - Gestion de Usuarios</h2>
+                
+                <div class="form-section">
+                    <h3>➕ Agregar Nuevo Usuario</h3>
+                    <p style="color: #666; margin-bottom: 15px; font-size: 14px;">
+                        Crea un nuevo usuario para los clientes que compran el Pack.
+                    </p>
+                    <div class="form-row">
+                        <input type="email" id="newUserEmail" placeholder="Email del cliente" required>
+                        <input type="text" id="newUserName" placeholder="Nombre completo" required>
+                        <input type="password" id="newUserPassword" placeholder="Contraseña temporal" required>
+                    </div>
+                    <div class="form-row">
+                        <input type="date" id="newUserPurchaseDate">
+                        <button class="btn" onclick="addNewUser()" style="background: #28a745;">✓ Crear Usuario</button>
+                    </div>
+                </div>
+                
                 <div class="form-section">
                     <h3>Usuarios del Sistema</h3>
                     <p style="color: #666; margin-bottom: 20px; font-size: 14px;">
@@ -668,40 +685,81 @@
             <!-- TAB: MATERIAL COMPLEMENTARIO -->
             <div id="materials" class="tab-content">
                 <h2>📥 Material Complementario</h2>
-                <div class="form-section" style="text-align: center; padding: 40px;">
-                    <h3 style="margin-bottom: 20px;">Pack del Taller Organizado</h3>
-                    <p style="color: #666; margin-bottom: 20px; font-size: 15px;">
+                <div class="form-section" style="padding: 30px;">
+                    <h3 style="margin-bottom: 20px; text-align: center;">Pack del Taller Organizado</h3>
+                    <p style="color: #666; margin-bottom: 20px; font-size: 15px; text-align: center;">
                         El material complementario en PDF estará disponible para descargar después de <strong>8 días</strong> desde tu primer acceso.
                     </p>
                     <div id="materialStatus" style="margin: 30px 0;">
-                        <div style="background: #f0f0f0; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="background: #f0f0f0; padding: 20px; border-radius: 8px; margin-bottom: 30px; text-align: center;">
                             <p style="color: #666; margin-bottom: 10px;">Estado de tu acceso:</p>
                             <p id="accessInfo" style="font-size: 18px; font-weight: 600; color: #667eea;">Cargando...</p>
                         </div>
                     </div>
-                    <button id="downloadBtn" onclick="downloadMaterial()" style="
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        color: white;
-                        padding: 12px 30px;
-                        border: none;
-                        border-radius: 6px;
-                        font-size: 16px;
-                        cursor: pointer;
-                        font-weight: 600;
-                        transition: all 0.3s ease;
-                        display: none;
-                    ">📥 Descargar Material</button>
-                    <button id="downloadBtnDisabled" style="
-                        background: #ccc;
-                        color: #666;
-                        padding: 12px 30px;
-                        border: none;
-                        border-radius: 6px;
-                        font-size: 16px;
-                        cursor: not-allowed;
-                        font-weight: 600;
-                        display: none;
-                    ">⏳ Material no disponible aún</button>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px;">
+                        <!-- Guía de Uso -->
+                        <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; border: 2px solid #e0e0e0; text-align: center;">
+                            <h4 style="color: #8B4513; margin-bottom: 15px;">📖 Guía de Uso</h4>
+                            <p style="color: #666; font-size: 13px; margin-bottom: 15px;">Manual completo sobre cómo usar la aplicación</p>
+                            <button id="downloadGuideBtn" onclick="downloadGuide()" style="
+                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                color: white;
+                                padding: 10px 20px;
+                                border: none;
+                                border-radius: 6px;
+                                font-size: 14px;
+                                cursor: pointer;
+                                font-weight: 600;
+                                transition: all 0.3s ease;
+                                width: 100%;
+                                display: none;
+                            ">📥 Descargar Guía</button>
+                            <button id="downloadGuideBtnDisabled" style="
+                                background: #ccc;
+                                color: #666;
+                                padding: 10px 20px;
+                                border: none;
+                                border-radius: 6px;
+                                font-size: 14px;
+                                cursor: not-allowed;
+                                font-weight: 600;
+                                width: 100%;
+                                display: none;
+                            ">⏳ No disponible aún</button>
+                        </div>
+                        
+                        <!-- Pack Info -->
+                        <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; border: 2px solid #e0e0e0; text-align: center;">
+                            <h4 style="color: #8B4513; margin-bottom: 15px;">📋 Información del Pack</h4>
+                            <p style="color: #666; font-size: 13px; margin-bottom: 15px;">Detalles y características del Pack</p>
+                            <button id="downloadPackBtn" onclick="downloadPack()" style="
+                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                color: white;
+                                padding: 10px 20px;
+                                border: none;
+                                border-radius: 6px;
+                                font-size: 14px;
+                                cursor: pointer;
+                                font-weight: 600;
+                                transition: all 0.3s ease;
+                                width: 100%;
+                                display: none;
+                            ">📥 Descargar Info</button>
+                            <button id="downloadPackBtnDisabled" style="
+                                background: #ccc;
+                                color: #666;
+                                padding: 10px 20px;
+                                border: none;
+                                border-radius: 6px;
+                                font-size: 14px;
+                                cursor: not-allowed;
+                                font-weight: 600;
+                                width: 100%;
+                                display: none;
+                            ">⏳ No disponible aún</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1175,20 +1233,26 @@
                 const data = await response.json();
                 
                 const accessInfo = document.getElementById('accessInfo');
-                const downloadBtn = document.getElementById('downloadBtn');
-                const downloadBtnDisabled = document.getElementById('downloadBtnDisabled');
+                const downloadGuideBtn = document.getElementById('downloadGuideBtn');
+                const downloadGuideBtnDisabled = document.getElementById('downloadGuideBtnDisabled');
+                const downloadPackBtn = document.getElementById('downloadPackBtn');
+                const downloadPackBtnDisabled = document.getElementById('downloadPackBtnDisabled');
                 
                 if (data.canDownload) {
                     accessInfo.innerHTML = '✅ Material disponible para descargar';
                     accessInfo.style.color = '#28a745';
-                    downloadBtn.style.display = 'inline-block';
-                    downloadBtnDisabled.style.display = 'none';
+                    downloadGuideBtn.style.display = 'block';
+                    downloadGuideBtnDisabled.style.display = 'none';
+                    downloadPackBtn.style.display = 'block';
+                    downloadPackBtnDisabled.style.display = 'none';
                 } else {
                     const daysLeft = data.daysRemaining;
                     accessInfo.innerHTML = `⏳ Material disponible en ${daysLeft} día${daysLeft !== 1 ? 's' : ''}`;
                     accessInfo.style.color = '#ff9800';
-                    downloadBtn.style.display = 'none';
-                    downloadBtnDisabled.style.display = 'inline-block';
+                    downloadGuideBtn.style.display = 'none';
+                    downloadGuideBtnDisabled.style.display = 'block';
+                    downloadPackBtn.style.display = 'none';
+                    downloadPackBtnDisabled.style.display = 'block';
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -1219,6 +1283,58 @@
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error al descargar el material');
+            }
+        }
+
+        async function downloadGuide() {
+            try {
+                const response = await fetch(`${API_URL}/download-guide`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'Guia_Uso_App.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                } else {
+                    const error = await response.json();
+                    alert(error.error || 'Error al descargar');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al descargar la guía');
+            }
+        }
+
+        async function downloadPack() {
+            try {
+                const response = await fetch(`${API_URL}/download-material`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'Pack_Taller_Organizado_Info.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                } else {
+                    const error = await response.json();
+                    alert(error.error || 'Error al descargar');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al descargar el pack');
             }
         }
 
@@ -1272,13 +1388,14 @@
             }
             
             try {
+                const dateStr = purchaseDate + 'T00:00:00Z';
                 const response = await fetch(`${API_URL}/admin/users/${userId}/set-purchase-date`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ purchase_date: new Date(purchaseDate).toISOString() })
+                    body: JSON.stringify({ purchase_date: dateStr })
                 });
                 
                 if (response.ok) {
@@ -1286,6 +1403,48 @@
                     loadAdminUsers();
                 } else {
                     alert('Error al actualizar');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+         }
+
+        async function addNewUser() {
+            const email = document.getElementById('newUserEmail').value.trim();
+            const name = document.getElementById('newUserName').value.trim();
+            const password = document.getElementById('newUserPassword').value.trim();
+            const purchaseDate = document.getElementById('newUserPurchaseDate').value;
+            
+            if (!email || !name || !password) {
+                alert('Por favor completa todos los campos requeridos');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/admin/users`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        email,
+                        name,
+                        password,
+                        purchase_date: purchaseDate ? new Date(purchaseDate).toISOString() : null
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('Usuario creado exitosamente');
+                    document.getElementById('newUserEmail').value = '';
+                    document.getElementById('newUserName').value = '';
+                    document.getElementById('newUserPassword').value = '';
+                    document.getElementById('newUserPurchaseDate').value = '';
+                    loadAdminUsers();
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + (error.error || 'No se pudo crear el usuario'));
                 }
             } catch (error) {
                 alert('Error: ' + error.message);
